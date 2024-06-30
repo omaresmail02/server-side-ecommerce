@@ -4,12 +4,12 @@ from django.shortcuts import render, get_object_or_404
 from .models import Product, Category, Review
 from rest_framework import generics
 from .serializers import ProductSerializer, CategorySerializer, ReviewSerializer
-from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly, SAFE_METHODS, IsAuthenticated
+from rest_framework import permissions
 
 
 
 class ProductListCreateView(generics.ListCreateAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [permissions.AllowAny]
     serializer_class = ProductSerializer
     
     def get_queryset(self):
@@ -20,14 +20,14 @@ class ProductListCreateView(generics.ListCreateAPIView):
         return queryset
 
 class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [permissions.AllowAny]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
 
 class CategoryListCreateView(generics.ListCreateAPIView):
     serializer_class = CategorySerializer
-    permission_classes = [AllowAny]
+    permission_classes = [permissions.AllowAny]
     def get_queryset(self):
         queryset = Product.objects.all()
         category_id = self.request.query_params.get('category_id')
@@ -37,13 +37,13 @@ class CategoryListCreateView(generics.ListCreateAPIView):
 
 
 class CategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [permissions.AllowAny]
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
 class ReviewListCreateView(generics.ListCreateAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         queryset = Review.objects.all().select_related('product')
@@ -57,19 +57,19 @@ class ReviewListCreateView(generics.ListCreateAPIView):
 
 class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_permissions(self):
         if self.request.method in permissions.SAFE_METHODS:
             return [permissions.AllowAny()]
-        return [IsAuthenticated()]
+        return [permissions.IsAuthenticated()]
 
     def perform_update(self, serializer):
         if serializer.instance.user != self.request.user:
-            raise PermissionDenied("You do not have permission to edit this review.")
+            raise permissions.PermissionDenied("You do not have permission to edit this review.")
         serializer.save()
 
     def perform_destroy(self, instance):
         if instance.user != self.request.user:
-            raise PermissionDenied("You do not have permission to delete this review.")
+            raise permissions.PermissionDenied("You do not have permission to delete this review.")
         instance.delete()
