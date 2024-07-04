@@ -147,7 +147,7 @@ export const forgotPassword = async (req, res, next) => {
     //   'host'
     // )}/reset-password/${resetToken}`;
 
-    const resetURL = `http://localhost:5173/reset-password/${resetToken}`;
+    const resetURL = `https://eureka-store.vercel.app/reset-password/${resetToken}`;
 
     // const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
 

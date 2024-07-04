@@ -34,8 +34,8 @@ export const getCheckoutSession = async (req, res, next) => {
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
-      success_url: 'http://localhost:5173/payment-success',
-      cancel_url: 'http://localhost:5173/payment-cancel',
+      success_url: 'https://eureka-store.vercel.app/payment-success',
+      cancel_url: 'https://eureka-store.vercel.app/payment-cancel',
 
       phone_number_collection: {
         enabled: true,
