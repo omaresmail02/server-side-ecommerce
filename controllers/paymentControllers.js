@@ -7,7 +7,7 @@ export const getCheckoutSession = async (req, res, next) => {
 
     const lineItems = products.map((product) => ({
       price_data: {
-        currency: 'usd',
+        currency: 'EGP',
         product_data: {
           name: product.data.product.title,
           description: product.data.product.description,
